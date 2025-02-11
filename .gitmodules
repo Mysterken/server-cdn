@@ -1,0 +1,6 @@
+[submodule "go-cdn"]
+	path = go-cdn
+	url = git@github.com:Mysterken/go-cdn.git
+[submodule "react-cdn"]
+	path = react-cdn
+	url = git@github.com:Mysterken/react-cdn.git

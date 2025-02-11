@@ -1,0 +1,42 @@
+---
+
+services:
+  reverse-proxy:
+    image: caddy:2.9-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - backend
+      - frontend
+
+  frontend:
+    build:
+      context: ../react-cdn
+      dockerfile: docker/Dockerfile
+      target: node_prod
+      args:
+        - NODE_PORT=${NODE_PORT:-5173}
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT:-3000}:${NGINX_PORT:-3000}"
+    environment:
+      - NGINX_PORT=${NGINX_PORT:-3000}
+
+  backend:
+    build:
+      context: ../go-cdn
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080"
+
+volumes:
+  caddy_data:
+  caddy_config:
