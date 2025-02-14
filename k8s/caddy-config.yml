@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: caddy-config
+data:
+  Caddyfile: |
+    {
+      admin off
+    }
+  
+    :80 {
+      encode gzip
+      reverse_proxy /api/* backend:8080 {
+        lb_policy round_robin
+      }
+      reverse_proxy /* frontend:3000
+    }
