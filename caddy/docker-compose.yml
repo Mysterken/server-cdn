@@ -34,8 +34,13 @@ services:
       context: ../go-cdn
       dockerfile: docker/Dockerfile
     restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
     ports:
       - "8080"
+    networks:
+      - mongonet
 
   mongo:
     image: mongo
